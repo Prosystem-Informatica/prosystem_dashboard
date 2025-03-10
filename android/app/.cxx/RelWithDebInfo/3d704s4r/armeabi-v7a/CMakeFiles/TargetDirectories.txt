@@ -1,0 +1,2 @@
+C:/Users/Giovanni Zaghi/StudioProjects/prosystem_dashboard/android/app/.cxx/RelWithDebInfo/3d704s4r/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/Giovanni Zaghi/StudioProjects/prosystem_dashboard/android/app/.cxx/RelWithDebInfo/3d704s4r/armeabi-v7a/CMakeFiles/rebuild_cache.dir
