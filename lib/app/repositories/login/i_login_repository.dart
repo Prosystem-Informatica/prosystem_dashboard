@@ -4,5 +4,5 @@ import 'package:prosystem_dashboard/app/repositories/login/model/validation_mode
 
 abstract class ILoginRepository {
   Future<ValidationModel> login(String cnpj);
-  Future<List<UserAuthModel>> loginUser(String port, String username, String password);
+  Future<List<UserAuthModel>> loginUser(String username, String password);
 }

@@ -4,25 +4,36 @@ import 'package:http/http.dart' as http;
 import 'package:prosystem_dashboard/app/core/rest/rest_client.dart';
 import 'package:prosystem_dashboard/app/repositories/payment_daily/i_payment_daily_repository.dart';
 import 'package:prosystem_dashboard/app/repositories/payment_daily/models/payment_daily_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PaymentDailyRepository implements IPaymentDailyRepository {
   final RestClient _rest;
+  late SharedPreferences prefs;
 
-  const PaymentDailyRepository({
+  PaymentDailyRepository({
     required RestClient rest,
   }) : _rest = rest;
 
+
   @override
-  Future<PaymentDailyModel> paymentDaily(String idempresa, String mesano) async {
+  Future<PaymentDailyModel> paymentDaily(
+      String idempresa, String mesano) async {
     try {
+      prefs = await SharedPreferences.getInstance();
+      var host = prefs.getString("host");
+      var port = prefs.getString("port");
+      print("Info enviado ${idempresa} e mes ${mesano}");
       var url =
-          'http://prosystem02.dyndns-work.com:8082/datasnap/rest/TServerAPPnfe/FatDiario/$mesano/$idempresa';
+          'http://$host:$port/datasnap/rest/TServerAPPnfe/FatDiario/$mesano/$idempresa';
+      print("URL > ${url}");
+
       var response = await http.get(Uri.parse(url));
 
       var jsonData = jsonDecode(response.body);
-      print("Json > ${jsonData[0]}");
 
       var res = await PaymentDailyModel.fromJson(jsonData[0]);
+
+      print("Pagamento diario ${res.toString()}");
 
       return res;
     } catch (e) {
@@ -30,5 +41,4 @@ class PaymentDailyRepository implements IPaymentDailyRepository {
       return PaymentDailyModel();
     }
   }
-
 }

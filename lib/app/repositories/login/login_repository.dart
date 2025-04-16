@@ -5,11 +5,12 @@ import 'package:prosystem_dashboard/app/core/rest/rest_client.dart';
 import 'package:prosystem_dashboard/app/repositories/login/i_login_repository.dart';
 import 'package:prosystem_dashboard/app/repositories/login/model/user_auth_model.dart';
 import 'package:prosystem_dashboard/app/repositories/login/model/validation_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginRepository implements ILoginRepository {
   final RestClient _rest;
-
-  const LoginRepository({
+  late SharedPreferences prefs;
+  LoginRepository({
     required RestClient rest,
   }) : _rest = rest;
 
@@ -51,14 +52,18 @@ class LoginRepository implements ILoginRepository {
   }
 
   @override
-  Future<List<UserAuthModel>> loginUser(String port, String username, String password) async {
+  Future<List<UserAuthModel>> loginUser(String username, String password) async {
     try {
+      prefs = await SharedPreferences.getInstance();
+      var host = prefs.getString("host");
+      var port = prefs.getString("port");
       var url =
-          'http://prosystem02.dyndns-work.com:$port/datasnap/rest/TServerAPPnfe/LoginApp/$username/$password';
+          'http://$host:$port/datasnap/rest/TServerAPPnfe/LoginApp/$username/$password';
+
+      print("URL > ${url}");
       var response = await http.get(Uri.parse(url));
 
       var jsonData = jsonDecode(response.body);
-      print("Json Works> ${jsonData}");
 
       List<UserAuthModel> users = (jsonData as List)
           .map((item) => UserAuthModel.fromJson(item))

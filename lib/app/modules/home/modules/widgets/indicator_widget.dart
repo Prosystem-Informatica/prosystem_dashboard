@@ -32,10 +32,13 @@ class Indicator extends StatelessWidget {
         ),
         Text(
           text,
+          overflow: TextOverflow.fade,
+          maxLines: 2,
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 11,
             fontWeight: FontWeight.bold,
             color: textColor,
+
           ),
         )
       ],

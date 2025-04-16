@@ -44,7 +44,7 @@ class LoginBlocCubit extends Cubit<LoginBlocState> {
     }
   }
 
-  Future<void> loginUser(String port, String username, String password) async {
+  Future<void> loginUser( String username, String password) async {
     try {
       emit(
         state.copyWith(
@@ -52,7 +52,7 @@ class LoginBlocCubit extends Cubit<LoginBlocState> {
         ),
       );
       final loginValidation =
-          await loginRepository.loginUser(port, username, password);
+          await loginRepository.loginUser(username, password);
 
       bool isValid =
           loginValidation.any((validation) => validation.codigo != "0");

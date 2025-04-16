@@ -8,6 +8,8 @@ class TextFieldCustom extends StatefulWidget {
   final List<TextInputFormatter>? formatters;
   final String? Function(String?)? validator;
   final bool obscureText;
+  final TextInputType? inputType;
+  final ValueChanged<String>? onChanged;
 
   const TextFieldCustom({
     super.key,
@@ -17,6 +19,8 @@ class TextFieldCustom extends StatefulWidget {
     this.formatters,
     this.validator,
     this.obscureText = false,
+    this.inputType,
+    this.onChanged
   });
 
   @override
@@ -57,6 +61,8 @@ class _TextFieldCustomState extends State<TextFieldCustom> {
               obscureText: widget.obscureText,
               style: TextStyle(color: Colors.black),
               inputFormatters: widget.formatters,
+              onChanged: widget.onChanged,
+              keyboardType: widget.inputType,
               decoration: InputDecoration(
                 hintText: widget.hintText,
                 hintStyle: TextStyle(color: Colors.black.withOpacity(.32)),

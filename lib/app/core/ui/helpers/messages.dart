@@ -30,6 +30,7 @@ mixin Messages<T extends StatefulWidget> on State<T> {
         maxLines: 4,
         message: message,
         textStyle: textStyle,
+        backgroundColor: Color(0xFF0511F2),
       ),
     );
   }

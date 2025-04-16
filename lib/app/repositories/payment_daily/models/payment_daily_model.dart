@@ -49,4 +49,9 @@ class PaymentDailyModel {
     data['TTCHEQUESAB'] = this.ttchequesab;
     return data;
   }
+
+  @override
+  String toString() {
+    return 'PaymentDailyModel{metadodia: $metadodia, metaparcial: $metaparcial, qtdpedidos: $qtdpedidos, ttpedidos: $ttpedidos, qtdcheques: $qtdcheques, ttcheques: $ttcheques, qtdchequesbx: $qtdchequesbx, ttchequesbx: $ttchequesbx, qtdchequesab: $qtdchequesab, ttchequesab: $ttchequesab}';
+  }
 }

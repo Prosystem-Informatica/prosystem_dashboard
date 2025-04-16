@@ -1,0 +1,2 @@
+C:/Users/vanni/Documents/dev/prosystem_dashboard/android/app/.cxx/Debug/5a3k4w1h/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/vanni/Documents/dev/prosystem_dashboard/android/app/.cxx/Debug/5a3k4w1h/armeabi-v7a/CMakeFiles/rebuild_cache.dir

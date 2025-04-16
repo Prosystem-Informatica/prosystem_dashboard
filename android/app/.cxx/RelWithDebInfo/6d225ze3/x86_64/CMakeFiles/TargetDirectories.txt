@@ -1,0 +1,2 @@
+C:/Users/vanni/Documents/dev/prosystem_dashboard/android/app/.cxx/RelWithDebInfo/6d225ze3/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/vanni/Documents/dev/prosystem_dashboard/android/app/.cxx/RelWithDebInfo/6d225ze3/x86_64/CMakeFiles/rebuild_cache.dir
