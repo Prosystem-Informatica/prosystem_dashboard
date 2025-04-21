@@ -67,7 +67,7 @@ class _TechnicalAssistancePageState extends State<TechnicalAssistancePage> {
               padding: const EdgeInsets.all(12.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 15,
+                spacing: 12,
                 children: [
                   Row(
                     children: [
@@ -75,11 +75,10 @@ class _TechnicalAssistancePageState extends State<TechnicalAssistancePage> {
                     Text("${products.totalAssistencia}")
                     ],
                   ),
+                  Text("Quantidade de Assistências ", style: TextStyle(fontWeight: FontWeight.bold),),
                   Row(
-                    spacing: 15,
+                    spacing: 10,
                     children: [
-
-                      Text("Quantidade de Assistências ", style: TextStyle(fontWeight: FontWeight.bold),),
                       Column(
                         children: [
                           Text("em aberto", style: TextStyle(fontWeight: FontWeight.bold),),
@@ -94,9 +93,10 @@ class _TechnicalAssistancePageState extends State<TechnicalAssistancePage> {
                           Text("em aberto", style: TextStyle(fontWeight: FontWeight.bold),),
                           Text("${products.totalAssisbx}"),
                         ],
-                      )
+                      ),
                     ],
                   ),
+
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: LayoutBuilder(

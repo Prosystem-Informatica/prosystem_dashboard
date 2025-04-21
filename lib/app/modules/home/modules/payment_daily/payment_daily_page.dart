@@ -65,7 +65,7 @@ class _PaymentDailyPageState extends State<PaymentDailyPage> {
                     height: 18,
                   ),
                   Text(
-                    "Faturamento ${formatAndValidateMMYYYY(_selectMonth)}",
+                    "Faturamento do dia ${formatDate(DateTime.now())}",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   AspectRatio(

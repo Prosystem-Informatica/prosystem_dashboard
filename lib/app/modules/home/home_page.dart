@@ -249,7 +249,7 @@ class _DashboardState extends State<Dashboard> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            Padding(
+            /*Padding(
               padding: const EdgeInsets.all(12.0),
               child: Row(
                 children: [
@@ -282,11 +282,10 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ],
               ),
-            ),
-
+            ),*/
             Divider(),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.601,
+              height: MediaQuery.of(context).size.height * 0.751,
               width: MediaQuery.of(context).size.width,
               child: ListView(
                 children: [
@@ -313,18 +312,25 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage("assets/bg-login.jpg"),
-          fit: BoxFit.cover,
-        ),
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showMonthYearPicker(context),
+        backgroundColor: Color(0xFF0511F2),
+        child: Icon(Icons.calendar_month, color: Colors.white,),
       ),
-      child: Column(
-        children: [
-          _buildHorizontalScrollList(),
-          SizedBox(height: 20),
-        ],
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/bg-login.jpg"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Column(
+          children: [
+            _buildHorizontalScrollList(),
+            SizedBox(height: 20),
+          ],
+        ),
       ),
     );
   }

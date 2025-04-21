@@ -175,7 +175,13 @@ class _CommercialPageState extends State<CommercialPage>
                                 ),
                               ],
                             ),
-                            Text("${formatCurrency(state.commercialModel.totalPedPend ?? "0,0") ?? ""} ${state.commercialModel.porcPedPend}"),
+                            Row(
+                              spacing: 18,
+                              children: [
+                                Text("${formatCurrency(state.commercialModel.totalPedPend ?? "0,0") ?? ""} "),
+                                Text("${state.commercialModel.porcPedPend}")
+                              ],
+                            ),
                             Row(
                               children: [
                                 Text(
@@ -188,7 +194,13 @@ class _CommercialPageState extends State<CommercialPage>
                                 ),
                               ],
                             ),
-                            Text("${formatCurrency(state.commercialModel.totalPedBx ?? "0,00")} ${state.commercialModel.porcPedBx}"),
+                            Row(
+                              spacing: 18,
+                              children: [
+                                Text("${formatCurrency(state.commercialModel.totalPedBx ?? "0,00")} "),
+                                Text("${state.commercialModel.porcPedBx}")
+                              ],
+                            ),
                             SizedBox(
                               height: 40,
                             ),
@@ -212,12 +224,18 @@ class _CommercialPageState extends State<CommercialPage>
                                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                                 ),
                                 Text(
-                                  state.commercialModel.qtdOrcPend ?? "",
+                                  state.commercialModel.qtdOrcBx ?? "",
                                   style: TextStyle(fontSize: 16),
                                 ),
                               ],
                             ),
-                            Text("${formatCurrency(state.commercialModel.totalOrcPend ?? "0,0")} ${state.commercialModel.porcOrcPend}"),
+                            Row(
+                              spacing: 18,
+                              children: [
+                                Text("${formatCurrency(state.commercialModel.totalOrcBx ?? "0,0")} "),
+                                Text("${state.commercialModel.porcOrcBx}")
+                              ],
+                            ),
                             Row(
                               children: [
                                 Text(
@@ -225,12 +243,18 @@ class _CommercialPageState extends State<CommercialPage>
                                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                                 ),
                                 Text(
-                                  state.commercialModel.qtdOrcBx ?? "",
+                                  state.commercialModel.qtdOrcPend ?? "",
                                   style: TextStyle(fontSize: 16),
                                 ),
                               ],
                             ),
-                            Text("${formatCurrency(state.commercialModel.totalOrcBx ?? "0,0")} ${state.commercialModel.porcOrcBx}"),
+                            Row(
+                              spacing: 18,
+                              children: [
+                                Text("${formatCurrency(state.commercialModel.totalOrcPend ?? "0,0")} "),
+                                Text("${state.commercialModel.porcOrcPend}")
+                              ],
+                            ),
                             SizedBox(
                               height: 40,
                             ),
@@ -259,7 +283,13 @@ class _CommercialPageState extends State<CommercialPage>
                                 ),
                               ],
                             ),
-                            Text("${formatCurrency(state.commercialModel.totalPrePedBx ?? "0,0")} ${state.commercialModel.porcPrePedBx}"),
+                            Row(
+                              spacing: 18,
+                              children: [
+                                Text("${formatCurrency(state.commercialModel.totalPrePedBx ?? "0,0")} "),
+                                Text("${state.commercialModel.porcPrePedBx}")
+                              ],
+                            ),
                             Row(
                               children: [
                                 Text(
@@ -272,7 +302,13 @@ class _CommercialPageState extends State<CommercialPage>
                                 ),
                               ],
                             ),
-                            Text("${formatCurrency(state.commercialModel.totalPrePedPend ?? "0,0")}  ${state.commercialModel.porcPrePedPend}")
+                            Row(
+                              spacing: 18,
+                              children: [
+                                Text("${formatCurrency(state.commercialModel.totalPrePedPend ?? "0,0")} "),
+                                Text("${state.commercialModel.porcPrePedPend}")
+                              ],
+                            )
 
                           ],
                         ),
@@ -311,7 +347,7 @@ class _CommercialPageState extends State<CommercialPage>
                                 ),
                                 DataCell(Text(item.quant.toString())),
                                 DataCell(Text(
-                                  'R\$${item.total!}',
+                                  formatCurrency(item.total ?? "0,0"),
                                 )),
                                 DataCell(Text(
                                   '${item.porc!}%',
@@ -424,7 +460,7 @@ class _CommercialPageState extends State<CommercialPage>
                                 ),
                                 DataCell(Text(item.quant.toString())),
                                 DataCell(Text(
-                                  'R\$${item.total!}',
+                                  formatCurrency(item.total ?? "0,0"),
                                 )),
                                 DataCell(Text(
                                   '${item.porc!}%',
