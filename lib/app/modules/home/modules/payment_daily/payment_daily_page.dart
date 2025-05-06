@@ -154,10 +154,20 @@ class _PaymentDailyPageState extends State<PaymentDailyPage> {
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        Text(
-                          state.paymentDailyModel!.qtdpedidos!,
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                        Row(
+                          spacing: 8,
+                          children: [
+                            Text(
+                              state.paymentDailyModel!.qtdpedidos ?? "0",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              formatCurrency(state.paymentDailyModel!.ttpedidos ?? "0,0"),
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          ],
                         ),
                         SizedBox(
                           height: 10,
@@ -167,30 +177,60 @@ class _PaymentDailyPageState extends State<PaymentDailyPage> {
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        Text(
-                          state.paymentDailyModel!.qtdcheques!,
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                        Row(
+                          spacing: 8,
+                          children: [
+                            Text(
+                              state.paymentDailyModel!.qtdcheques ?? "0",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              formatCurrency(state.paymentDailyModel!.ttcheques ?? "0,0"),
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          ],
                         ),
                         Text(
                           "Quant. de Cheques Baixada/Passado no dia",
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        Text(
-                          state.paymentDailyModel!.qtdchequesbx!,
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                        Row(
+                          spacing: 8,
+                          children: [
+                            Text(
+                              state.paymentDailyModel!.qtdchequesbx ?? "0",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              formatCurrency(state.paymentDailyModel!.ttchequesbx ?? "0,0"),
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          ],
                         ),
                         Text(
                           "Quant. de Cheques abertos no dia",
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        Text(
-                          state.paymentDailyModel!.qtdchequesab!,
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                        Row(
+                          spacing: 8,
+                          children: [
+                            Text(
+                              state.paymentDailyModel!.qtdchequesab ?? "0",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              formatCurrency(state.paymentDailyModel!.ttchequesab ?? "0,0"),
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          ],
                         ),
                       ],
                     ),

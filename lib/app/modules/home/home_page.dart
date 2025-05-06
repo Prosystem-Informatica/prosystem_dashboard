@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../core/ui/custom_buttom.dart';
+import 'package:prosystem_dashboard/app/modules/home/model/dash_board_permission.dart';
 import '../../repositories/login/model/user_auth_model.dart';
 import '../profile/profile_page.dart';
 
@@ -244,46 +244,37 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget _buildHorizontalScrollList() {
+    final permissions = widget.userAuthModel.dashboardPermissions;
+
+    print("Oq temos aq > ${permissions.toString()}");
+    final cards = <Widget>[];
+
+    if (permissions?.faturamentoDiario ?? false) {
+      cards.add(_buildSummaryCard("Faturamento Diario", "/daily"));
+    }
+    if (permissions?.faturamentoMensal ?? false) {
+      cards.add(_buildSummaryCard("Faturamento Mensal", "/month"));
+    }
+    if (permissions?.cadastro ?? false) {
+      cards.add(_buildSummaryCard("Cadastro", "/register"));
+    }
+    if (permissions?.comercial ?? false) {
+      cards.add(_buildSummaryCard("Comercial", "/commercial"));
+    }
+    if (permissions?.financeiro ?? false) {
+      cards.add(_buildSummaryCard("Financeiro", "/financial"));
+    }
+    if (permissions?.pagamentosDiarios ?? false) {
+      cards.add(_buildSummaryCard("Pagamentos Diarios", "/payments"));
+    }
+    if (permissions?.assistenciaTecnica ?? false) {
+      cards.add(_buildSummaryCard("Assistencia Tecnica", "/technical"));
+    }
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            /*Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Card(
-                      color: Colors.transparent,
-                      shadowColor: Colors.transparent,
-                      child: ListTile(
-                        title: Text(
-                          _selectedDate != null
-                              ? ' ${_selectedDate!.month.toString().padLeft(2, '0')}/${_selectedDate!.year}'
-                              : ' Selecione mês e ano',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        leading: Icon(Icons.calendar_today,
-                            color: Color(0xFF0511F2)),
-                        onTap: () => _showMonthYearPicker(context),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 15.0),
-                    child: CustomButton(
-                      onPressed: () async {
-                        // TODO: implementar get para salvar informações
-                      },
-                      text: "Aplicar",
-                      disabled: false,
-                    ),
-                  ),
-                ],
-              ),
-            ),*/
-            Divider(),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.751,
               width: MediaQuery.of(context).size.width,
@@ -291,15 +282,7 @@ class _DashboardState extends State<Dashboard> {
                 children: [
                   Wrap(
                     direction: Axis.horizontal,
-                    children: [
-                      _buildSummaryCard("Faturamento Diario", "/daily"),
-                      _buildSummaryCard("Faturamento Mensal", "/month"),
-                      _buildSummaryCard("Cadastro", "/register"),
-                      _buildSummaryCard("Comercial", "/commercial"),
-                      _buildSummaryCard("Financeiro", "/financial"),
-                      _buildSummaryCard("Pagamentos Diarios", "/payments"),
-                      _buildSummaryCard("Assistencia Tecnica", "/technical"),
-                    ],
+                    children: cards,
                   )
                 ],
               ),

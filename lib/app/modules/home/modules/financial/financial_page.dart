@@ -116,6 +116,7 @@ class _FinancialPageState extends State<FinancialPage>
               builder: (context, state) {
                 return SingleChildScrollView(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -141,7 +142,7 @@ class _FinancialPageState extends State<FinancialPage>
                                           style: TextStyle(fontSize: 14),
                                         ),
                                         Text(
-                                          state.financialModel.porcRecAbt ?? "",
+                                          "${state.financialModel.porcRecAbt ?? "0"}%" ,
                                           style: TextStyle(fontSize: 14),
                                         ),
                                       ],
@@ -153,7 +154,7 @@ class _FinancialPageState extends State<FinancialPage>
                                           style: TextStyle(fontSize: 14),
                                         ),
                                         Text(
-                                          state.financialModel.porcRecBx ?? "",
+                                          "${state.financialModel.porcRecBx ?? ""}%",
                                           style: TextStyle(fontSize: 14),
                                         ),
                                       ],
@@ -178,7 +179,7 @@ class _FinancialPageState extends State<FinancialPage>
                                           style: TextStyle(fontSize: 14),
                                         ),
                                         Text(
-                                          state.financialModel.porcPagAbt ?? "",
+                                          "${state.financialModel.porcPagAbt ?? ""}%",
                                           style: TextStyle(fontSize: 14),
                                         ),
                                       ],
@@ -190,7 +191,7 @@ class _FinancialPageState extends State<FinancialPage>
                                           style: TextStyle(fontSize: 14),
                                         ),
                                         Text(
-                                          state.financialModel.porcPagBx ?? "",
+                                          "${state.financialModel.porcPagBx ?? ""}%",
                                           style: TextStyle(fontSize: 14),
                                         ),
                                       ],
@@ -328,6 +329,37 @@ class _FinancialPageState extends State<FinancialPage>
                           ],
                         ),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "Despesas Fixas",
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                        child: Row(
+                          children: [
+                            Expanded(flex: 3, child: Text('Contas a Pagar', style: TextStyle(fontWeight: FontWeight.bold))),
+                            Expanded(flex: 2, child: Text('Total R\$', style: TextStyle(fontWeight: FontWeight.bold), textAlign: TextAlign.center)),
+                            Expanded(flex: 2, child: Text('Em aberto R\$', style: TextStyle(fontWeight: FontWeight.bold), textAlign: TextAlign.end)),
+                            Expanded(flex: 2, child: Text('Baixados R\$', style: TextStyle(fontWeight: FontWeight.bold), textAlign: TextAlign.end)),
+                          ],
+                        ),
+                      ),
+
+                      // Linha de dados
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Row(
+                          children: [
+                            Expanded(flex: 3, child: Text('')),
+                            Expanded(flex: 2, child: Text(formatCurrency(state.financialModel.totalDespFx ?? "0,0") , textAlign: TextAlign.end)),
+                            Expanded(flex: 2, child: Text(formatCurrency(state.financialModel.totalDespFxAbt ?? "0,0"), textAlign: TextAlign.end)),
+                            Expanded(flex: 2, child: Text(formatCurrency(state.financialModel.totalDespFxBx ?? "0,0"), textAlign: TextAlign.end)),
+                          ],
+                        ),
+                      ),
                       AspectRatio(
                         aspectRatio: 1.5,
                         child: Stack(
@@ -364,34 +396,47 @@ class _FinancialPageState extends State<FinancialPage>
                           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                       ),
-                      LayoutBuilder(builder: (context, constraints) {
-                        return SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: DataTable(
-                            columnSpacing: constraints.maxWidth * 0.06,
-                            columns: const [
-                              DataColumn(label: Text('Conta Contábil')),
-                              DataColumn(
-                                  label: Text('Valor R\$'), numeric: true),
-                            ],
-                            rows: _visibleItemsABC.map((item) {
-                              return DataRow(cells: [
-                                DataCell(
-                                  SizedBox(
-                                    width: constraints.maxWidth * 0.60,
-                                    child: Text(
-                                      item.conta!,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 2,
-                                    ),
-                                  ),
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          return SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(
+                                minWidth: constraints.maxWidth,
+                              ),
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: DataTable(
+                                  columnSpacing: constraints.maxWidth * 0.34,
+                                  columns: const [
+                                    DataColumn(label: Text('Conta Contábil')),
+                                    DataColumn(label: Text('Valor R\$'), numeric: true),
+                                  ],
+                                  rows: _visibleItemsABC.map((item) {
+                                    return DataRow(
+                                      cells: [
+                                        DataCell(
+                                          ConstrainedBox(
+                                            constraints: BoxConstraints(
+                                              maxWidth: constraints.maxWidth * 0.34,
+                                            ),
+                                            child: Text(
+                                              item.conta!,
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 2,
+                                            ),
+                                          ),
+                                        ),
+                                        DataCell(Text(formatCurrency(item.valor.toString() ?? "0,0"))),
+                                      ],
+                                    );
+                                  }).toList(),
                                 ),
-                                DataCell(Text(formatCurrency(item.valor.toString() ?? "0,0"))),
-                              ]);
-                            }).toList(),
-                          ),
-                        );
-                      }),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                       Container(
                         width: double.infinity,
                         padding:

@@ -167,7 +167,7 @@ class _MonthPaymentsPageState extends State<MonthPaymentsPage> {
                             children: <Widget>[
                               Indicator(
                                 color: Colors.blue.shade900,
-                                text: "Meta do dia ${formatCurrency(state.monthPaymentsModel!.meta ?? "0.0")}",
+                                text: "Meta do mês ${formatCurrency(state.monthPaymentsModel!.meta ?? "0.0")}",
                                 isSquare: true,
                               ),
                               SizedBox(

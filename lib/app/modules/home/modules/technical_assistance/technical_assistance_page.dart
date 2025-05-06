@@ -90,7 +90,7 @@ class _TechnicalAssistancePageState extends State<TechnicalAssistancePage> {
                       ),
                       Column(
                         children: [
-                          Text("em aberto", style: TextStyle(fontWeight: FontWeight.bold),),
+                          Text("Baixadas", style: TextStyle(fontWeight: FontWeight.bold),),
                           Text("${products.totalAssisbx}"),
                         ],
                       ),
@@ -109,22 +109,11 @@ class _TechnicalAssistancePageState extends State<TechnicalAssistancePage> {
                                 label: Text('Produtos',
                                     style: TextStyle(fontWeight: FontWeight.bold))),
                             DataColumn(
-                              label: Column(
-                                children: [
-                                  Text('Quant',
-                                      style: TextStyle(fontWeight: FontWeight.bold)),
-                                  Text(formatDate(DateTime.now().subtract(Duration(days: 1))),style: TextStyle(fontSize: 12),)
-                                ],
-                              ),),
+                              label: Text('Quant',
+                                  style: TextStyle(fontWeight: FontWeight.bold)),),
                             DataColumn(
-                                label: Column(
-                                  children: [
-                                    Text('Porc(%)',
-                                        style: TextStyle(fontWeight: FontWeight.bold)),
-                                    Text(formatDate(DateTime.now()),style: TextStyle(fontSize: 12),)
-
-                                  ],
-                                )),
+                                label: Text('Porc(%)',
+                                    style: TextStyle(fontWeight: FontWeight.bold)),),
 
                           ],
                           rows: products.abcAssistencia!.map((product) {
