@@ -118,11 +118,73 @@ class _CommercialPageState extends State<CommercialPage>
     return (_allItemsFamily.length / _itemsFamilyPerPage).ceil();
   }
 
+
+  Widget buildTile(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+          Text(value, style: TextStyle(fontSize: 14)),
+        ],
+      ),
+    );
+  }
+
+  Widget buildComercialData(CommercialModel model) {
+    return Column(
+      children: [
+        ExpansionTile(
+          title: Text("Pedidos", style: TextStyle(fontWeight: FontWeight.bold)),
+          children: [
+            buildTile("Quantidade", model.qtdPed ?? "0"),
+            buildTile("Total", formatCurrency(model.totalPed ?? "0,0")),
+            buildTile("Em aberto", model.qtdPedPend ?? "0"),
+            buildTile("Total em aberto", formatCurrency(model.totalPedPend ?? "0,0")),
+            buildTile("% em aberto", model.porcPedPend ?? "0%"),
+            buildTile("Baixados", model.qtdPedBx ?? "0"),
+            buildTile("Total baixado", formatCurrency(model.totalPedBx ?? "0,0")),
+            buildTile("% baixado", model.porcPedBx ?? "0%"),
+          ],
+        ),
+        ExpansionTile(
+          title: Text("Orçamentos", style: TextStyle(fontWeight: FontWeight.bold)),
+          children: [
+            buildTile("Incluídos", model.qtdOrc ?? "0"),
+            buildTile("Total", formatCurrency(model.totalOrc ?? "0,0")),
+            buildTile("Geraram pedidos", model.qtdOrcBx ?? "0"),
+            buildTile("Total pedidos", formatCurrency(model.totalOrcBx ?? "0,0")),
+            buildTile("% gerado", model.porcOrcBx ?? "0%"),
+            buildTile("Não realizados", model.qtdOrcPend ?? "0"),
+            buildTile("Total não realizado", formatCurrency(model.totalOrcPend ?? "0,0")),
+            buildTile("% não realizado", model.porcOrcPend ?? "0%"),
+          ],
+        ),
+        ExpansionTile(
+          title: Text("Pré-vendas", style: TextStyle(fontWeight: FontWeight.bold)),
+          children: [
+            buildTile("Incluídas", model.qtdPrePed ?? "0"),
+            buildTile("Total", formatCurrency(model.totalPrePed ?? "0,0")),
+            buildTile("Geraram pedidos", model.qtdPrePedBx ?? "0"),
+            buildTile("Total pedidos", formatCurrency(model.totalPrePedBx ?? "0,0")),
+            buildTile("% gerado", model.porcPrePedBx ?? "0%"),
+            buildTile("Não realizadas", model.qtdPrePedPend ?? "0"),
+            buildTile("Total não realizado", formatCurrency(model.totalPrePedPend ?? "0,0")),
+            buildTile("% não realizado", model.porcPrePedPend ?? "0%"),
+          ],
+        ),
+      ],
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Comercial'),
+        title: Text('Comercial', style: TextStyle(
+          color: Colors.white
+        ),),
+        backgroundColor: Color(0xFF0511F2),
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
@@ -145,174 +207,7 @@ class _CommercialPageState extends State<CommercialPage>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  "Quant de pedidos : ",
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  state.commercialModel.qtdPed ?? "",
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ],
-                            ),
-                            Text(formatCurrency(state.commercialModel.totalPed ?? "0,0"),style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),),
-                            Row(
-                              children: [
-                                Text(
-                                  "Quant de pedidos em aberto : ",
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  state.commercialModel.qtdPedPend ?? "0",
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              spacing: 18,
-                              children: [
-                                Text("${formatCurrency(state.commercialModel.totalPedPend ?? "0,0") ?? ""} "),
-                                Text("${state.commercialModel.porcPedPend}")
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  "Quant de pedidos baixados : ",
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  state.commercialModel.qtdPedBx ?? "",
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              spacing: 18,
-                              children: [
-                                Text("${formatCurrency(state.commercialModel.totalPedBx ?? "0,00")} "),
-                                Text("${state.commercialModel.porcPedBx}")
-                              ],
-                            ),
-                            SizedBox(
-                              height: 40,
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  "Orçamentos incluidos : ",
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  state.commercialModel.qtdOrc ?? "",
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ],
-                            ),
-                            Text(formatCurrency(state.commercialModel.totalOrc ?? "0,0"),style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),),
-                            Row(
-                              children: [
-                                Text(
-                                  "Orçamento gerado pedidos : ",
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  state.commercialModel.qtdOrcBx ?? "",
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              spacing: 18,
-                              children: [
-                                Text("${formatCurrency(state.commercialModel.totalOrcBx ?? "0,0")} "),
-                                Text("${state.commercialModel.porcOrcBx}")
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  "Orçamentos não realizado : ",
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  state.commercialModel.qtdOrcPend ?? "",
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              spacing: 18,
-                              children: [
-                                Text("${formatCurrency(state.commercialModel.totalOrcPend ?? "0,0")} "),
-                                Text("${state.commercialModel.porcOrcPend}")
-                              ],
-                            ),
-                            SizedBox(
-                              height: 40,
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  "Pre venda incluidas : ",
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  state.commercialModel.qtdPrePed ?? "",
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ],
-                            ),
-                            Text("${formatCurrency(state.commercialModel.totalPrePed ?? "0,0")} ",style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),),
-                            Row(
-                              children: [
-                                Text(
-                                  "Pre vendas gerada pedidos : ",
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  state.commercialModel.qtdPrePedBx ?? "",
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              spacing: 18,
-                              children: [
-                                Text("${formatCurrency(state.commercialModel.totalPrePedBx ?? "0,0")} "),
-                                Text("${state.commercialModel.porcPrePedBx}")
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  "Pre vendas não realizadas : ",
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  state.commercialModel.qtdPrePedPend ?? "",
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              spacing: 18,
-                              children: [
-                                Text("${formatCurrency(state.commercialModel.totalPrePedPend ?? "0,0")} "),
-                                Text("${state.commercialModel.porcPrePedPend}")
-                              ],
-                            )
-
-                          ],
-                        ),
-                      ),
+                      buildComercialData(state.commercialModel),
                       //TODO: Poderia ser 1 componente
                       Padding(
                         padding: const EdgeInsets.all(8.0),

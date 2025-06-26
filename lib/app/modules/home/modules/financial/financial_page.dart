@@ -92,11 +92,79 @@ class _FinancialPageState extends State<FinancialPage>
     return double.tryParse(formattedValue) ?? 0.0;
   }
 
+  Widget buildFinancialOverview(FinancialModel model) {
+    return Padding(
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Bloco Contas
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildAccountColumn("Contas a receber", model.porcRecAbt, model.porcRecBx),
+              _buildAccountColumn("Contas a pagar", model.porcPagAbt, model.porcPagBx),
+            ],
+          ),
+          const SizedBox(height: 24),
+
+          // Bloco Totais
+          _buildTotalRow("Total recebimento", model.totalRec),
+          _buildTotalRow("Total pagamentos", model.totalPag),
+          Divider(thickness: 1),
+          _buildTotalRow("Diferença", model.difRecPag, isHighlight: true),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAccountColumn(String title, String? aberto, String? baixado) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          SizedBox(height: 6),
+          Text("Em aberto: ${aberto ?? "0"}%", style: TextStyle(fontSize: 14)),
+          Text("Baixados: ${baixado ?? "0"}%", style: TextStyle(fontSize: 14)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTotalRow(String label, String? value, {bool isHighlight = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              "$label:",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: isHighlight ? Colors.green[700] : Colors.black,
+              ),
+            ),
+          ),
+          Text(
+            formatCurrency(value ?? "0,0"),
+            style: TextStyle(fontSize: 16),
+          ),
+        ],
+      ),
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Financeiro'),
+        title: Text('Financeiro', style: TextStyle(
+            color: Colors.white
+        ),),
+        backgroundColor: Color(0xFF0511F2),
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
@@ -118,140 +186,7 @@ class _FinancialPageState extends State<FinancialPage>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Row(
-                              spacing: 8,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Contas a receber",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Em Aberto: ",
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                        Text(
-                                          "${state.financialModel.porcRecAbt ?? "0"}%" ,
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Baixados: ",
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                        Text(
-                                          "${state.financialModel.porcRecBx ?? ""}%",
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(width: 20), // Espaço entre as colunas
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Contas a pagar",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Em Aberto: ",
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                        Text(
-                                          "${state.financialModel.porcPagAbt ?? ""}%",
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Baixados: ",
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                        Text(
-                                          "${state.financialModel.porcPagBx ?? ""}%",
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 40,
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  "Total recebimento : ",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  formatCurrency(state.financialModel.totalRec ?? "0,0"),
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  "Total pagamentos : ",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  formatCurrency(state.financialModel.totalPag ?? "0,0"),
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Diferença : ",
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      formatCurrency(state.financialModel.difRecPag ?? "0,0"),
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
+                      buildFinancialOverview(state.financialModel),
                       AspectRatio(
                         aspectRatio: 1.5,
                         child: Row(
@@ -298,33 +233,34 @@ class _FinancialPageState extends State<FinancialPage>
                             const SizedBox(
                               width: 18,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(right: 3),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                spacing: 2,
-                                children: <Widget>[
-                                  Indicator(
-                                    color: Colors.blue.shade900,
-                                    text:
-                                        "Total Recebimentos ${formatCurrency(state.financialModel.totalRec ?? "00.00")}",
-                                    isSquare: true,
-                                  ),
-                                  SizedBox(
-                                    height: 6,
-                                  ),
-                                  Indicator(
-                                    color: Colors.red.shade900,
-                                    text:
-                                        'Total Pagamentos ${formatCurrency(state.financialModel.totalPag ?? "00.00")}',
-                                    isSquare: true,
-                                  ),
-                                  SizedBox(
-                                    height: 18,
-                                  ),
-                                ],
-                              ),
+
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(13),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          spacing: 2,
+                          children: <Widget>[
+                            Indicator(
+                              color: Colors.blue.shade900,
+                              text:
+                              "Total Recebimentos ${formatCurrency(state.financialModel.totalRec ?? "00.00")}",
+                              isSquare: true,
+                            ),
+                            SizedBox(
+                              height: 6,
+                            ),
+                            Indicator(
+                              color: Colors.red.shade900,
+                              text:
+                              'Total Pagamentos ${formatCurrency(state.financialModel.totalPag ?? "00.00")}',
+                              isSquare: true,
+                            ),
+                            SizedBox(
+                              height: 18,
                             ),
                           ],
                         ),

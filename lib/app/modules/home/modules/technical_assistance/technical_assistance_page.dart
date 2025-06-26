@@ -72,7 +72,7 @@ class _TechnicalAssistancePageState extends State<TechnicalAssistancePage> {
                   Row(
                     children: [
                       Text("Quantidade de Assistências cadastradas ", style: TextStyle(fontWeight: FontWeight.bold),),
-                    Text("${products.totalAssistencia}")
+                    Text("${products.totalAssistencia ?? ""}")
                     ],
                   ),
                   Text("Quantidade de Assistências ", style: TextStyle(fontWeight: FontWeight.bold),),
@@ -82,7 +82,7 @@ class _TechnicalAssistancePageState extends State<TechnicalAssistancePage> {
                       Column(
                         children: [
                           Text("em aberto", style: TextStyle(fontWeight: FontWeight.bold),),
-                          Text("${products.totalAssispend}")
+                          Text("${products.totalAssispend ?? 0}")
                         ],
                       ),
                       SizedBox(
@@ -91,7 +91,7 @@ class _TechnicalAssistancePageState extends State<TechnicalAssistancePage> {
                       Column(
                         children: [
                           Text("Baixadas", style: TextStyle(fontWeight: FontWeight.bold),),
-                          Text("${products.totalAssisbx}"),
+                          Text("${products.totalAssisbx ?? 0}"),
                         ],
                       ),
                     ],
@@ -101,7 +101,8 @@ class _TechnicalAssistancePageState extends State<TechnicalAssistancePage> {
                     padding: const EdgeInsets.all(8.0),
                     child: LayoutBuilder(
                       builder: (context, constraints) {
-                        return DataTable(
+                        return products.abcAssistencia != null
+                            ? DataTable(
                           columnSpacing: 14.0,
                           dataRowHeight: 60.0,
                           columns: [
@@ -116,13 +117,14 @@ class _TechnicalAssistancePageState extends State<TechnicalAssistancePage> {
                                     style: TextStyle(fontWeight: FontWeight.bold)),),
 
                           ],
-                          rows: products.abcAssistencia!.map((product) {
+                          rows: products.abcAssistencia != null
+                              ? products.abcAssistencia!.map((product) {
                             return DataRow(cells: [
                               DataCell(
                                 SizedBox(
                                   width: constraints.maxWidth * 0.40,
                                   child: Text(
-                                    product.produto!,
+                                    product.produto ?? '---',
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 2,
                                   ),
@@ -132,7 +134,7 @@ class _TechnicalAssistancePageState extends State<TechnicalAssistancePage> {
                                 SizedBox(
                                   width: constraints.maxWidth * 0.25,
                                   child: Text(
-                                    '${product.quant}',
+                                    product.quant?.toString() ?? '0',
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                   ),
@@ -142,15 +144,16 @@ class _TechnicalAssistancePageState extends State<TechnicalAssistancePage> {
                                 SizedBox(
                                   width: constraints.maxWidth * 0.25,
                                   child: Text(
-                                    '${product.porc}',
+                                    product.porc?.toString() ?? '0%',
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 2,
                                   ),
                                 ),
                               ),
                             ]);
-                          }).toList(),
-                        );
+                          }).toList()
+                              : [],
+                        ) : Text("");
                       },
                     ),
                   ),

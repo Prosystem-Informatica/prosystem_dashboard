@@ -155,41 +155,36 @@ class _MonthPaymentsPageState extends State<MonthPaymentsPage> {
                             ),
                           ),
                         ),
-                        const SizedBox(
-                          width: 18,
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      spacing: 2,
+                      children: <Widget>[
+                        Indicator(
+                          color: Colors.blue.shade900,
+                          text: "Meta do mês ${formatCurrency(state.monthPaymentsModel!.meta ?? "0.0")}",
+                          isSquare: true,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 15),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            spacing: 2,
-                            children: <Widget>[
-                              Indicator(
-                                color: Colors.blue.shade900,
-                                text: "Meta do mês ${formatCurrency(state.monthPaymentsModel!.meta ?? "0.0")}",
-                                isSquare: true,
-                              ),
-                              SizedBox(
-                                height: 6,
-                              ),
-                              Indicator(
-                                color: Colors.red.shade900,
-                                text: 'Valor faturado ${formatCurrency(state.monthPaymentsModel!.metaparcial ?? "0.0")}',
-                                isSquare: true,
-                              ),
-                              SizedBox(
-                                height: 18,
-                              ),
-                            ],
-                          ),
+                        SizedBox(
+                          height: 6,
                         ),
+                        Indicator(
+                          color: Colors.red.shade900,
+                          text: 'Valor faturado ${formatCurrency(state.monthPaymentsModel!.metaparcial ?? "0.0")}',
+                          isSquare: true,
+                        ),
+
                       ],
                     ),
                   ),
                   SizedBox(
                     width: 25,
-                    height: 35,
+                    height: 25,
                   ),
                   AspectRatio(
                     aspectRatio: 1.23,
@@ -253,10 +248,21 @@ class _MonthPaymentsPageState extends State<MonthPaymentsPage> {
 
                             return Padding(
                               padding: const EdgeInsets.only(left: 8.0, top: 2),
-                              child: Indicator(
-                                color: color,
-                                text: "${representante.nome ?? 'N/A'} - ${formatCurrency(representante.total ?? "0.0") ?? '0'}",
-                                isSquare: true,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Indicator(
+                                    color: color,
+                                    text: "${representante.nome ?? 'N/A'} ",
+                                    isSquare: true,
+
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text("${formatCurrency(representante.total ?? "0.0") ?? '0'}"),
+                                  Divider()
+                                ],
                               ),
                             );
                           }).toList() ?? [

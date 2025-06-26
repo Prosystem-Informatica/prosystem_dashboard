@@ -42,6 +42,42 @@ class _PaymentDailyPageState extends State<PaymentDailyPage> {
     return double.tryParse(formattedValue) ?? 0.0;
   }
 
+  Widget _buildInfoCard({
+    required IconData icon,
+    required String title,
+    required String quantity,
+    required String value,
+  }) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+          children: [
+            Icon(icon, size: 30, color: Colors.blueAccent),
+            SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title,
+                      style: TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold)),
+                  SizedBox(height: 4),
+                  Text("Quantidade: $quantity",
+                      style: TextStyle(fontSize: 14)),
+                  Text("Valor: $value",
+                      style: TextStyle(fontSize: 14, color: Colors.green[700])),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,127 +146,67 @@ class _PaymentDailyPageState extends State<PaymentDailyPage> {
                         const SizedBox(
                           width: 18,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 15),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            spacing: 2,
-                            children: <Widget>[
-                              Indicator(
-                                color: Colors.blue.shade900,
-                                text: "Meta do dia ${formatCurrency(state.paymentDailyModel!.metadodia ?? "0.0")}",
-                                isSquare: true,
-                              ),
-                              SizedBox(
-                                height: 6,
-                              ),
-                              Indicator(
-                                color: Colors.red.shade900,
-                                text: 'Valor faturado ${formatCurrency(state.paymentDailyModel!.metaparcial ?? "0.0")}',
-                                isSquare: true,
-                              ),
-                              SizedBox(
-                                height: 18,
-                              ),
-                            ],
-                          ),
+
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      spacing: 2,
+                      children: <Widget>[
+                        Indicator(
+                          color: Colors.blue.shade900,
+                          text: "Meta do dia ${formatCurrency(state.paymentDailyModel!.metadodia ?? "0.0")}",
+                          isSquare: true,
+                        ),
+                        SizedBox(
+                          height: 6,
+                        ),
+                        Indicator(
+                          color: Colors.red.shade900,
+                          text: 'Valor faturado ${formatCurrency(state.paymentDailyModel!.metaparcial ?? "0.0")}',
+                          isSquare: true,
+                        ),
+                        SizedBox(
+                          height: 18,
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(
-                    width: 25,
-                    height: 35,
-                  ),
+
                   Padding(
                     padding: const EdgeInsets.all(18.0),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      spacing: 5,
                       children: [
-                        Text(
-                          "Quant. de Pedidos do dia",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                        _buildInfoCard(
+                          icon: Icons.shopping_cart,
+                          title: 'Pedidos do dia',
+                          quantity: state.paymentDailyModel?.qtdpedidos ?? "0",
+                          value: formatCurrency(state.paymentDailyModel?.ttpedidos ?? "0,0"),
                         ),
-                        Row(
-                          spacing: 8,
-                          children: [
-                            Text(
-                              state.paymentDailyModel!.qtdpedidos ?? "0",
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              formatCurrency(state.paymentDailyModel!.ttpedidos ?? "0,0"),
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                          ],
+                        SizedBox(height: 10),
+                        _buildInfoCard(
+                          icon: Icons.receipt_long,
+                          title: 'Cheques no dia',
+                          quantity: state.paymentDailyModel?.qtdcheques ?? "0",
+                          value: formatCurrency(state.paymentDailyModel?.ttcheques ?? "0,0"),
                         ),
-                        SizedBox(
-                          height: 10,
+                        SizedBox(height: 10),
+                        _buildInfoCard(
+                          icon: Icons.check_circle_outline,
+                          title: 'Cheques Baixados/Passados',
+                          quantity: state.paymentDailyModel?.qtdchequesbx ?? "0",
+                          value: formatCurrency(state.paymentDailyModel?.ttchequesbx ?? "0,0"),
                         ),
-                        Text(
-                          "Quant. de Cheques no dia",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        Row(
-                          spacing: 8,
-                          children: [
-                            Text(
-                              state.paymentDailyModel!.qtdcheques ?? "0",
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              formatCurrency(state.paymentDailyModel!.ttcheques ?? "0,0"),
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          "Quant. de Cheques Baixada/Passado no dia",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        Row(
-                          spacing: 8,
-                          children: [
-                            Text(
-                              state.paymentDailyModel!.qtdchequesbx ?? "0",
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              formatCurrency(state.paymentDailyModel!.ttchequesbx ?? "0,0"),
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          "Quant. de Cheques abertos no dia",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        Row(
-                          spacing: 8,
-                          children: [
-                            Text(
-                              state.paymentDailyModel!.qtdchequesab ?? "0",
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              formatCurrency(state.paymentDailyModel!.ttchequesab ?? "0,0"),
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                          ],
+                        SizedBox(height: 10),
+                        _buildInfoCard(
+                          icon: Icons.lock_open,
+                          title: 'Cheques Abertos',
+                          quantity: "${state.paymentDailyModel?.qtdchequesab ?? "0"}",
+                          value: formatCurrency(state.paymentDailyModel?.ttchequesab ?? "0,0"),
                         ),
                       ],
                     ),

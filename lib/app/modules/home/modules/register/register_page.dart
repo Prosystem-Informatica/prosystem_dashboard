@@ -60,6 +60,42 @@ class _RegisterPageState extends State<RegisterPage> {
         .register(idempresa: idempresa, mesano: mesano);
   }
 
+  Widget _buildInfoCard({
+    required IconData icon,
+    required String title,
+    required String quantity,
+    required String value,
+  }) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+          children: [
+            Icon(icon, size: 30, color: Colors.blueAccent),
+            SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title,
+                      style: TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold)),
+                  SizedBox(height: 4),
+                  Text("Quantidade: $quantity",
+                      style: TextStyle(fontSize: 14)),
+                  Text("Valor: $value",
+                      style: TextStyle(fontSize: 14, color: Colors.green[700])),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,104 +113,78 @@ class _RegisterPageState extends State<RegisterPage> {
         },
         builder: (context, state) {
           if (state.status == RegisterStatus.success) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  spacing: 8,
-                  children: [
-                    SizedBox(
-                      height: 35,
-                    ),
-                    Text(
-                      "Clientes incluido no mês",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    state.registerModel?.clienteinc?.isEmpty == null
-                        ? Text("0")
-                        : Text(state.registerModel!.clienteinc!),
-                    Text(
-                      "Total de clientes ativos",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    state.registerModel?.clienteinc?.isEmpty == null
-                        ? Text("0")
-                        : Text(state.registerModel!.clienteatv! ?? ""),
-                    Text(
-                      "Total de clientes inativo",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    state.registerModel?.clienteinc?.isEmpty == null
-                        ? Text("0")
-                        : Text(state.registerModel!.clienteinatv!),
-                    SizedBox(height: 25,),
-                    Text(
-                      "Total de clientes rec em atraso no mês",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    state.registerModel?.clienteinc?.isEmpty == null
-                        ? Text("0")
-                        : Row(
-                      spacing: 25,
-                          children: [
-                            Text(state.registerModel!.clienteatrasoqtd!),
-                            Text(formatCurrency(state.registerModel!.clienteatrasovlr ?? "0,0"),),
-
-                          ],
-                        ),
-                    Text(
-                      "Total de título vencidos",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    state.registerModel?.clienteinc?.isEmpty == null
-                        ? Text("0")
-                        : Row(
-                      spacing: 25,
-                          children: [
-                            Text(state.registerModel!.geralrecatrasoqtd!),
-                            Text(formatCurrency(state.registerModel!.geralatrasovlr ?? "0,0"),),
-                          ],
-                        ),
-                  ],
-                ),
+            final model = state.registerModel!;
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  _buildInfoCard(
+                    icon: Icons.person_add,
+                    title: 'Clientes incluídos no mês',
+                    quantity: model.clienteinc ?? "0",
+                    value: '',
+                  ),
+                  SizedBox(height: 12),
+                  _buildInfoCard(
+                    icon: Icons.verified_user,
+                    title: 'Clientes ativos',
+                    quantity: model.clienteatv ?? "0",
+                    value: '',
+                  ),
+                  SizedBox(height: 12),
+                  _buildInfoCard(
+                    icon: Icons.person_off,
+                    title: 'Clientes inativos',
+                    quantity: model.clienteinatv ?? "0",
+                    value: '',
+                  ),
+                  SizedBox(height: 12),
+                  _buildInfoCard(
+                    icon: Icons.schedule,
+                    title: 'Rec. em atraso no mês',
+                    quantity: model.clienteatrasoqtd ?? "0",
+                    value: formatCurrency(model.clienteatrasovlr ?? "0,0"),
+                  ),
+                  SizedBox(height: 12),
+                  _buildInfoCard(
+                    icon: Icons.warning_amber,
+                    title: 'Títulos vencidos',
+                    quantity: model.geralrecatrasoqtd ?? "0",
+                    value: formatCurrency(model.geralatrasovlr ?? "0,0"),
+                  ),
+                ],
               ),
             );
           } else if (state.status == RegisterStatus.loading) {
-            return Scaffold(
-              body: Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Carregando informações!!",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    CircularProgressIndicator()
-                  ],
-                ),
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text(
+                    "Carregando informações!!",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 16),
+                  CircularProgressIndicator(),
+                ],
               ),
             );
           } else {
-            return Column(
-              children: [
-                Text("Clientes incluido no mês"),
-                Text("0"),
-                Text("Total de clientes ativos"),
-                Text("0"),
-                Text("Total de clientes inativo"),
-                Text("0"),
-                Text("Total de clientes rec em atraso no mês"),
-                Text("0"),
-                Text("Total de título vencidos"),
-                Text("0"),
-              ],
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text("Clientes incluídos no mês: 0"),
+                  Text("Clientes ativos: 0"),
+                  Text("Clientes inativos: 0"),
+                  Text("Rec. em atraso no mês: 0"),
+                  Text("Títulos vencidos: 0"),
+                ],
+              ),
             );
           }
         },
+
       ),
     );
   }

@@ -311,7 +311,6 @@ class _DashboardState extends State<Dashboard> {
         child: Column(
           children: [
             _buildHorizontalScrollList(),
-            SizedBox(height: 20),
           ],
         ),
       ),
