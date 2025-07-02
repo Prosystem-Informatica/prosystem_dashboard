@@ -211,7 +211,7 @@ class _MonthPaymentsPageState extends State<MonthPaymentsPage> {
                             ),
                             Expanded(
                               child: Padding(
-                                padding: const EdgeInsets.only(right: 16, left: 6),
+                                padding: const EdgeInsets.only(right: 40, left: 15),
                                 child:LineChartWidget(
                                   isShowingMainData: isShowingMainData,
                                   monthPaymentsModel: state.monthPaymentsModel,

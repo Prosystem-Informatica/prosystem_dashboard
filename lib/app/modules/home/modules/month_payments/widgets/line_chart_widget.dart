@@ -37,7 +37,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
 
   List<String> _getLastFiveMonths(String selectedMonth) {
     final month = int.parse(selectedMonth.substring(0, 2));
-    final year = int.parse(selectedMonth.substring(2));
+    final year = int.parse(selectedMonth.substring(3));
 
     List<String> result = [];
 
@@ -91,7 +91,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     borderData: borderData,
     lineBarsData: lineBarsData1,
     minX: 0,
-    maxX: 14,
+    maxX: 15,
     maxY: 4,
     minY: 0,
   );
@@ -129,14 +129,17 @@ class _LineChartWidgetState extends State<LineChartWidget> {
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
-      fontSize: 14,
+      fontSize: 12,
     );
 
     if (value.toInt() >= 0 && value.toInt() < monthLabels.length) {
       return SideTitleWidget(
         meta: meta,
         space: 0,
-        child: Text(monthLabels[value.toInt()], style: style),
+        child: Padding(
+          padding: const EdgeInsets.only(right: 12.0),
+          child: Text(monthLabels[value.toInt()], style: style),
+        ),
       );
     }
     return const SizedBox.shrink();
@@ -145,19 +148,19 @@ class _LineChartWidgetState extends State<LineChartWidget> {
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
-      fontSize: 16,
+      fontSize: 14,
     );
 
     Widget text;
     switch (value.toInt()) {
       case 4:
-        text = const Text('1.000.000', style: style);
+        text = const Text('1M', style: style);
         break;
       case 8:
-        text = const Text('2.000.000', style: style);
+        text = const Text('2M', style: style);
         break;
       case 12:
-        text = const Text('3.000.000', style: style);
+        text = const Text('3M', style: style);
         break;
       default:
         text = const Text('');

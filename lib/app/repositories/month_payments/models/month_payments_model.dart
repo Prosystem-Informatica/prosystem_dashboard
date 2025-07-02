@@ -6,6 +6,7 @@ class MonthPaymentsModel {
   String? total3;
   String? total4;
   String? total5;
+  String? total6;
   List<REPRESENTANTES>? representantes;
 
   MonthPaymentsModel(
@@ -26,6 +27,7 @@ class MonthPaymentsModel {
     total3 = json['TOTAL-3'];
     total4 = json['TOTAL-4'];
     total5 = json['TOTAL-5'];
+    total6 = json['TOTAL-6'];
     if (json['REPRESENTANTES'] != null) {
       representantes = <REPRESENTANTES>[];
       json['REPRESENTANTES'].forEach((v) {
@@ -43,6 +45,7 @@ class MonthPaymentsModel {
     data['TOTAL-3'] = this.total3;
     data['TOTAL-4'] = this.total4;
     data['TOTAL-5'] = this.total5;
+    data['TOTAL-6'] = this.total6;
     if (this.representantes != null) {
       data['REPRESENTANTES'] =
           this.representantes!.map((v) => v.toJson()).toList();
@@ -52,7 +55,7 @@ class MonthPaymentsModel {
 
   @override
   String toString() {
-    return 'MonthPaymentsModel{meta: $meta, metaparcial: $metaparcial, total1: $total1, total2: $total2, total3: $total3, total4: $total4, total5: $total5, representantes: $representantes}';
+    return 'MonthPaymentsModel{meta: $meta, metaparcial: $metaparcial, total1: $total1, total2: $total2, total3: $total3, total4: $total4, total5: $total5, total6: $total6, representantes: $representantes}';
   }
 }
 

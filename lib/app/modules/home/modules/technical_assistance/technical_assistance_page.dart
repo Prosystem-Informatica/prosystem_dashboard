@@ -69,92 +69,126 @@ class _TechnicalAssistancePageState extends State<TechnicalAssistancePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 spacing: 12,
                 children: [
-                  Row(
-                    children: [
-                      Text("Quantidade de Assistências cadastradas ", style: TextStyle(fontWeight: FontWeight.bold),),
-                    Text("${products.totalAssistencia ?? ""}")
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Quantidade de Assistências cadastradas",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          "${products.totalAssistencia ?? '0'}",
+                          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.blueAccent),
+                        ),
+                        SizedBox(height: 16),
+
+                        Text(
+                          "Quantidade de Assistências",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 8),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Container(
+                                padding: EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue.shade50,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Text("Em aberto", style: TextStyle(fontWeight: FontWeight.bold)),
+                                    SizedBox(height: 4),
+                                    Text("${products.totalAssispend ?? '0'}", style: TextStyle(fontSize: 18)),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 12),
+                            Expanded(
+                              child: Container(
+                                padding: EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: Colors.green.shade50,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Text("Baixadas", style: TextStyle(fontWeight: FontWeight.bold)),
+                                    SizedBox(height: 4),
+                                    Text("${products.totalAssisbx ?? '0'}", style: TextStyle(fontSize: 18)),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                  Text("Quantidade de Assistências ", style: TextStyle(fontWeight: FontWeight.bold),),
-                  Row(
-                    spacing: 10,
-                    children: [
-                      Column(
-                        children: [
-                          Text("em aberto", style: TextStyle(fontWeight: FontWeight.bold),),
-                          Text("${products.totalAssispend ?? 0}")
-                        ],
-                      ),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      Column(
-                        children: [
-                          Text("Baixadas", style: TextStyle(fontWeight: FontWeight.bold),),
-                          Text("${products.totalAssisbx ?? 0}"),
-                        ],
-                      ),
-                    ],
-                  ),
+
 
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        return products.abcAssistencia != null
-                            ? DataTable(
-                          columnSpacing: 14.0,
-                          dataRowHeight: 60.0,
-                          columns: [
-                            DataColumn(
-                                label: Text('Produtos',
-                                    style: TextStyle(fontWeight: FontWeight.bold))),
-                            DataColumn(
-                              label: Text('Quant',
-                                  style: TextStyle(fontWeight: FontWeight.bold)),),
-                            DataColumn(
-                                label: Text('Porc(%)',
-                                    style: TextStyle(fontWeight: FontWeight.bold)),),
-
-                          ],
-                          rows: products.abcAssistencia != null
-                              ? products.abcAssistencia!.map((product) {
-                            return DataRow(cells: [
-                              DataCell(
-                                SizedBox(
-                                  width: constraints.maxWidth * 0.40,
-                                  child: Text(
-                                    product.produto ?? '---',
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
+                    padding: const EdgeInsets.only(top: 16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Produtos em destaque",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        SizedBox(height: 10),
+                        ...products.abcAssistencia!.map((product) {
+                          return Card(
+                            margin: EdgeInsets.symmetric(vertical: 6),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                            elevation: 2,
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 4,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      children: [
+                                        Text(product.produto ?? '---',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)),
+                                        SizedBox(height: 4),
+                                        Text(
+                                            "Quantidade: ${product.quant ?? '0'}"),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ),
-                              DataCell(
-                                SizedBox(
-                                  width: constraints.maxWidth * 0.25,
-                                  child: Text(
-                                    product.quant?.toString() ?? '0',
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
+                                  Expanded(
+                                    flex: 2,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.end,
+                                      children: [
+                                        Text("Porc.: ${product.porc ?? '0%'}",
+                                            style: TextStyle(
+                                                color: Colors.blueAccent,
+                                                fontWeight: FontWeight.w600)),
+                                      ],
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
-                              DataCell(
-                                SizedBox(
-                                  width: constraints.maxWidth * 0.25,
-                                  child: Text(
-                                    product.porc?.toString() ?? '0%',
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                  ),
-                                ),
-                              ),
-                            ]);
-                          }).toList()
-                              : [],
-                        ) : Text("");
-                      },
+                            ),
+                          );
+                        }).toList(),
+                      ],
                     ),
                   ),
                 ],

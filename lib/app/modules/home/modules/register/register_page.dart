@@ -64,7 +64,7 @@ class _RegisterPageState extends State<RegisterPage> {
     required IconData icon,
     required String title,
     required String quantity,
-    required String value,
+     String? value,
   }) {
     return Card(
       elevation: 2,
@@ -85,7 +85,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   SizedBox(height: 4),
                   Text("Quantidade: $quantity",
                       style: TextStyle(fontSize: 14)),
-                  Text("Valor: $value",
+                  value == null ? Row() : Text("Valor: $value",
                       style: TextStyle(fontSize: 14, color: Colors.green[700])),
                 ],
               ),
@@ -122,21 +122,18 @@ class _RegisterPageState extends State<RegisterPage> {
                     icon: Icons.person_add,
                     title: 'Clientes incluídos no mês',
                     quantity: model.clienteinc ?? "0",
-                    value: '',
                   ),
                   SizedBox(height: 12),
                   _buildInfoCard(
                     icon: Icons.verified_user,
                     title: 'Clientes ativos',
                     quantity: model.clienteatv ?? "0",
-                    value: '',
                   ),
                   SizedBox(height: 12),
                   _buildInfoCard(
                     icon: Icons.person_off,
                     title: 'Clientes inativos',
                     quantity: model.clienteinatv ?? "0",
-                    value: '',
                   ),
                   SizedBox(height: 12),
                   _buildInfoCard(
