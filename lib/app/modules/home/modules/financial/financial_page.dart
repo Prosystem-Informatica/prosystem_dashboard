@@ -47,6 +47,14 @@ class _FinancialPageState extends State<FinancialPage>
 
     setState(() {
       _isLoading = false;
+
+      // Ordena do maior para o menor valor
+      _allItemsABC.sort((a, b) {
+        final valorA = parseStringToDouble(a.valor.toString());
+        final valorB = parseStringToDouble(b.valor.toString());
+        return valorB.compareTo(valorA); // DESC
+      });
+
       _updateVisibleItems();
     });
   }
@@ -177,7 +185,15 @@ class _FinancialPageState extends State<FinancialPage>
                   },
                   any: () {
                     _allItemsABC = state.financialModel.contaContabil ?? [];
+
+                    _allItemsABC.sort((a, b) {
+                      final valorA = parseStringToDouble(a.valor.toString());
+                      final valorB = parseStringToDouble(b.valor.toString());
+                      return valorB.compareTo(valorA);
+                    });
+
                     _updateVisibleItems();
+
                   },
                 );
               },
@@ -221,7 +237,7 @@ class _FinancialPageState extends State<FinancialPage>
                                     centerSpaceRadius: 40,
                                     sections: showingSections(
                                         parseStringToDouble(
-                                            state.financialModel.totalPag ??
+                                            state.financialModel.totalRec ??
                                                 "00.00"),
                                         parseStringToDouble(
                                             state.financialModel.totalPag ??
@@ -343,7 +359,7 @@ class _FinancialPageState extends State<FinancialPage>
                               child: SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 child: DataTable(
-                                  columnSpacing: constraints.maxWidth * 0.34,
+                                  columnSpacing: constraints.maxWidth * 0.24,
                                   columns: const [
                                     DataColumn(label: Text('Conta Contábil')),
                                     DataColumn(label: Text('Valor R\$'), numeric: true),

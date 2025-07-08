@@ -127,6 +127,11 @@ class CommercialModel {
     }
     return data;
   }
+
+  @override
+  String toString() {
+    return 'CommercialModel{qtdPed: $qtdPed, totalPed: $totalPed, qtdPedBx: $qtdPedBx, totalPedBx: $totalPedBx, porcPedBx: $porcPedBx, qtdPedPend: $qtdPedPend, totalPedPend: $totalPedPend, porcPedPend: $porcPedPend, qtdOrc: $qtdOrc, totalOrc: $totalOrc, qtdOrcBx: $qtdOrcBx, totalOrcBx: $totalOrcBx, porcOrcBx: $porcOrcBx, qtdOrcPend: $qtdOrcPend, totalOrcPend: $totalOrcPend, porcOrcPend: $porcOrcPend, qtdPrePed: $qtdPrePed, totalPrePed: $totalPrePed, qtdPrePedBx: $qtdPrePedBx, totalPrePedBx: $totalPrePedBx, porcPrePedBx: $porcPrePedBx, qtdPrePedPend: $qtdPrePedPend, totalPrePedPend: $totalPrePedPend, porcPrePedPend: $porcPrePedPend, abcProdutos: $abcProdutos, abcFamilia: $abcFamilia}';
+  }
 }
 
 class AbcProdutos {
@@ -152,6 +157,11 @@ class AbcProdutos {
     data['PORC'] = porc;
     return data;
   }
+
+  @override
+  String toString() {
+    return 'AbcProdutos{produto: $produto, quant: $quant, total: $total, porc: $porc}';
+  }
 }
 
 class AbcFamilia {
@@ -176,5 +186,10 @@ class AbcFamilia {
     data['TOTAL'] = total;
     data['PORC'] = porc;
     return data;
+  }
+
+  @override
+  String toString() {
+    return 'AbcFamilia{familia: $familia, quant: $quant, total: $total, porc: $porc}';
   }
 }

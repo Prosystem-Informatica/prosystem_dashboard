@@ -176,7 +176,7 @@ class _TechnicalAssistancePageState extends State<TechnicalAssistancePage> {
                                       crossAxisAlignment:
                                       CrossAxisAlignment.end,
                                       children: [
-                                        Text("Porc.: ${product.porc ?? '0%'}",
+                                        Text("${product.porc ?? '0'}%",
                                             style: TextStyle(
                                                 color: Colors.blueAccent,
                                                 fontWeight: FontWeight.w600)),

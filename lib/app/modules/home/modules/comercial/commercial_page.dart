@@ -40,10 +40,29 @@ class _CommercialPageState extends State<CommercialPage>
     _generateTestData();
   }
 
+  double parseStringToDouble(String value) {
+    String formattedValue = value.replaceAll(',', '.');
+    return double.tryParse(formattedValue) ?? 0.0;
+  }
+
   void _generateTestData() {
     context
         .read<CommercialBlocCubit>()
         .commercial(idempresa: args.empresa!, mesano: _selectMonth);
+
+
+    _allItemsABC.sort((a, b) {
+      final valorA = parseStringToDouble(a.total.toString());
+      final valorB = parseStringToDouble(b.total.toString());
+      return valorB.compareTo(valorA); // DESC
+    });
+
+    _allItemsFamily.sort((a, b) {
+      final valorA = parseStringToDouble(a.total.toString());
+      final valorB = parseStringToDouble(b.total.toString());
+      return valorB.compareTo(valorA); // DESC
+    });
+
 
     setState(() {
       _isLoading = false;
@@ -198,6 +217,18 @@ class _CommercialPageState extends State<CommercialPage>
                   any: () {
                     _allItemsABC = state.commercialModel.abcProdutos ?? [];
                     _allItemsFamily = state.commercialModel.abcFamilia ?? [];
+
+                    _allItemsABC.sort((a, b) {
+                      final valorA = parseStringToDouble(a.total.toString());
+                      final valorB = parseStringToDouble(b.total.toString());
+                      return valorB.compareTo(valorA);
+                    });
+
+                    _allItemsFamily.sort((a, b) {
+                      final valorA = parseStringToDouble(a.total.toString());
+                      final valorB = parseStringToDouble(b.total.toString());
+                      return valorB.compareTo(valorA);
+                    });
                     _updateVisibleItems();
                   },
                 );
@@ -220,7 +251,7 @@ class _CommercialPageState extends State<CommercialPage>
                         return SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: DataTable(
-                            columnSpacing: constraints.maxWidth * 0.06,
+                            columnSpacing: constraints.maxWidth * 0.04,
                             columns: const [
                               DataColumn(label: Text('Produto')),
                               DataColumn(label: Text('Quant'), numeric: true),
@@ -232,7 +263,7 @@ class _CommercialPageState extends State<CommercialPage>
                               return DataRow(cells: [
                                 DataCell(
                                   SizedBox(
-                                    width: constraints.maxWidth * 0.36,
+                                    width: constraints.maxWidth * 0.34,
                                     child: Text(
                                       item.produto!,
                                       overflow: TextOverflow.ellipsis,
@@ -333,7 +364,7 @@ class _CommercialPageState extends State<CommercialPage>
                         return SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: DataTable(
-                            columnSpacing: constraints.maxWidth * 0.05,
+                            columnSpacing: constraints.maxWidth * 0.04,
                             columns: const [
                               DataColumn(label: Text('Produto')),
                               DataColumn(label: Text('Quant'), numeric: true),
@@ -345,7 +376,7 @@ class _CommercialPageState extends State<CommercialPage>
                               return DataRow(cells: [
                                 DataCell(
                                   SizedBox(
-                                    width: constraints.maxWidth * 0.36,
+                                    width: constraints.maxWidth * 0.32,
                                     child: Text(
                                       item.familia!,
                                       overflow: TextOverflow.ellipsis,

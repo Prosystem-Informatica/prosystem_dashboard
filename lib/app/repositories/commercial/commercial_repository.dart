@@ -28,7 +28,6 @@ class CommercialRepository implements ICommercialRepository {
       var url =
           'http://$host:$port/datasnap/rest/TServerAPPnfe/Comercial/$mesano/$idempresa';
 
-      print("URL > ${url}");
       Map<String, String> headers = {
         'Connection': 'keep-alive',
         'Keep-Alive': 'timeout=5, max=1000',
@@ -36,9 +35,7 @@ class CommercialRepository implements ICommercialRepository {
         'Accept': '*/*'
       };
 
-      var response = await http.get(Uri.parse(url),headers: headers);
-
-      print("Response do comercial > ${response.toString()}");
+      var response = await http.get(Uri.parse(url),headers: headers).timeout(Duration(seconds: 30));
 
       var jsonData = jsonDecode(response.body);
 

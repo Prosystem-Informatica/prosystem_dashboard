@@ -26,7 +26,7 @@ String formatCurrency(
       locale: 'pt_BR',
     );
 
-    print("Valor formatado > ${format.format(valueToFormat)}");
+    //print("Valor formatado > ${format.format(valueToFormat)}");
 
     return format.format(valueToFormat);
   } catch (e) {
