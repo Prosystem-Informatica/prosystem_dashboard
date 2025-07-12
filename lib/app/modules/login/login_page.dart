@@ -249,12 +249,12 @@ class _LoginPageState extends State<LoginPage> with Messages<LoginPage> {
                         if (state.validationModel!.codigo! == "0" ||
                             state.validationModel!.codigo! == "") {
                           await context.read<LoginBlocCubit>().login(
-                            "19685970000104" ?? cnpj.text.toUpperCase());
+                            /*"19685970000104" ??*/ cnpj.text.toUpperCase());
                         } else if (state.validationModel!.porta! != "" ||
                             state.validationModel!.empresa! != "") {
                           await context.read<LoginBlocCubit>().loginUser(
-                      "SUPORTE" ?? username.text.toUpperCase(),
-                              "PR05YST3M" ??  password.text.toUpperCase());
+                     /* "SUPORTE" ?? */username.text.toUpperCase(),
+                              /*"PR05YST3M" ??*/  password.text.toUpperCase());
                         }
                       }
                     },
