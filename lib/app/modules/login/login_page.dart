@@ -253,7 +253,7 @@ class _LoginPageState extends State<LoginPage> with Messages<LoginPage> {
                         } else if (state.validationModel!.porta! != "" ||
                             state.validationModel!.empresa! != "") {
                           await context.read<LoginBlocCubit>().loginUser(
-                     /* "SUPORTE" ?? */username.text.toUpperCase(),
+                     /*"SUPORTE" ?? */username.text.toUpperCase(),
                               /*"PR05YST3M" ??*/  password.text.toUpperCase());
                         }
                       }

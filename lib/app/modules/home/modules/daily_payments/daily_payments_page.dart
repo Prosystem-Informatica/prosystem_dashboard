@@ -88,63 +88,12 @@ class _DailyPaymentsPageState extends State<DailyPaymentsPage> {
                       0.0;
                   return value > 0.0;
                 }).toList();
-
-                double totalOntem = products.fold(
-                  0.0,
-                      (acc, e) => acc +
-                      double.tryParse(e.pagontem
-                          ?.replaceAll('.', '')
-                          .replaceAll(',', '.') ??
-                          '0.0')!,
-                );
-                double totalHoje = products.fold(
-                  0.0,
-                      (acc, e) => acc +
-                      double.tryParse(e.paghoje
-                          ?.replaceAll('.', '')
-                          .replaceAll(',', '.') ??
-                          '0.0')!,
-                );
-                double totalAmanha = products.fold(
-                  0.0,
-                      (acc, e) => acc +
-                      double.tryParse(e.pagamanha
-                          ?.replaceAll('.', '')
-                          .replaceAll(',', '.') ??
-                          '0.0')!,
-                );
-
                 return ListView.builder(
                   padding: const EdgeInsets.all(12),
                   itemCount: filteredProducts.length + 1,
                   itemBuilder: (context, index) {
                     if (index == filteredProducts.length) {
-                      return Card(
-                        color: Colors.green[100],
-                        elevation: 2,
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Total Geral',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(height: 8),
-                              if (selectedDay == 'ontem')
-                                Text(
-                                    "Total $ontem: ${formatCurrency(totalOntem.toString())}"),
-                              if (selectedDay == 'hoje')
-                                Text(
-                                    "Total $hoje: ${formatCurrency(totalHoje.toString())}"),
-                              if (selectedDay == 'amanha')
-                                Text(
-                                    "Total $amanha: ${formatCurrency(totalAmanha.toString())}"),
-                            ],
-                          ),
-                        ),
-                      );
+                      return Row();
                     }
 
                     final product = filteredProducts[index];
