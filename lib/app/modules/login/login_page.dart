@@ -147,7 +147,8 @@ class _LoginPageState extends State<LoginPage> with Messages<LoginPage> {
         state.status.matchAny(
           success: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
-            await prefs.setString('host', state.validationModel!.servidor!.toLowerCase());
+            await prefs.setString(
+                'host', state.validationModel!.servidor!.toLowerCase());
             await prefs.setString('port', state.validationModel!.porta!);
             showSuccess(state.successMessage ?? "Sucesso");
             if (state.successMessage == "Login Realizado com Sucesso!!") {
@@ -229,15 +230,19 @@ class _LoginPageState extends State<LoginPage> with Messages<LoginPage> {
                   ),
                   CustomButton(
                     onPressed: () async {
-                      SharedPreferences prefs = await SharedPreferences.getInstance();
-                      if (saveCredentials == true && prefs.getString("cnpj") != null) {
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      if (saveCredentials == true &&
+                          prefs.getString("cnpj") != null) {
                         await _saveCredentials(state.validationModel!);
                         _authenticate(state.validationModel!);
-                      } else if(saveCredentials == true && prefs.getString("cnpj") == null) {
+                      } else if (saveCredentials == true &&
+                          prefs.getString("cnpj") == null) {
                         if (state.validationModel!.codigo! == "0" ||
                             state.validationModel!.codigo! == "") {
-                          await context.read<LoginBlocCubit>().login(
-                              cnpj.text.toUpperCase());
+                          await context
+                              .read<LoginBlocCubit>()
+                              .login(cnpj.text.toUpperCase());
                         } else if (state.validationModel!.porta! != "" ||
                             state.validationModel!.empresa! != "") {
                           await context.read<LoginBlocCubit>().loginUser(
@@ -245,16 +250,16 @@ class _LoginPageState extends State<LoginPage> with Messages<LoginPage> {
                               password.text.toUpperCase());
                           await _saveCredentials(state.validationModel!);
                         }
-                      }else{
+                      } else {
                         if (state.validationModel!.codigo! == "0" ||
                             state.validationModel!.codigo! == "") {
                           await context.read<LoginBlocCubit>().login(
-                            /*"19685970000104" ??*/ cnpj.text.toUpperCase());
+                              /*"19685970000104" ?? */ cnpj.text.toUpperCase());
                         } else if (state.validationModel!.porta! != "" ||
                             state.validationModel!.empresa! != "") {
                           await context.read<LoginBlocCubit>().loginUser(
-                     /*"SUPORTE" ?? */username.text.toUpperCase(),
-                              /*"PR05YST3M" ??*/  password.text.toUpperCase());
+                              /*"SUPORTE" ?? */ username.text.toUpperCase(),
+                              /*"PR05YST3M" ?? */ password.text.toUpperCase());
                         }
                       }
                     },

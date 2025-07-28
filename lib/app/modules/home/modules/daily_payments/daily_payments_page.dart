@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -21,7 +22,7 @@ class _DailyPaymentsPageState extends State<DailyPaymentsPage> {
   UserAuthModel.fromJson(jsonDecode(Get.arguments)["user"]);
   final _selectMonth = jsonDecode(Get.arguments)["mesano"];
   List<DailyPaymentsModel> products = [];
-  String selectedDay = 'hoje'; // 'ontem', 'hoje', 'amanha'
+  String selectedDay = 'hoje';
 
   @override
   void initState() {
@@ -30,16 +31,20 @@ class _DailyPaymentsPageState extends State<DailyPaymentsPage> {
   }
 
   TextStyle _valueStyle(String? value) {
-    final double val = double.tryParse(
-      value?.replaceAll('.', '').replaceAll(',', '.') ?? '0.0',
-    ) ??
-        0.0;
+    if (value == null || value == '0,00') {
+      return const TextStyle(color: Colors.black54, fontSize: 15);
+    }
 
     return TextStyle(
-      color: val > 0 ? Colors.green.shade800 : Colors.black54,
-      fontWeight: val > 0 ? FontWeight.bold : FontWeight.normal,
+      color: Colors.green.shade800,
+      fontWeight: FontWeight.bold,
       fontSize: 15,
     );
+  }
+
+  double parseBrazilianCurrency(String? value) {
+    if (value == null) return 0.0;
+    return double.tryParse(value.replaceAll('.', '').replaceAll(',', '.')) ?? 0.0;
   }
 
   @override
@@ -50,8 +55,7 @@ class _DailyPaymentsPageState extends State<DailyPaymentsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title:
-        Text(args.fantasia!, style: const TextStyle(color: Colors.white)),
+        title: Text(args.fantasia!, style: const TextStyle(color: Colors.white)),
         backgroundColor: const Color(0xFF0511F2),
       ),
       body: Column(
@@ -82,18 +86,50 @@ class _DailyPaymentsPageState extends State<DailyPaymentsPage> {
                       : selectedDay == 'hoje'
                       ? product.paghoje
                       : product.pagamanha;
-                  final value = double.tryParse(
-                      rawValue?.replaceAll('.', '').replaceAll(',', '.') ??
-                          '0.0') ??
-                      0.0;
-                  return value > 0.0;
+                  return rawValue != null && rawValue != '0,00';
                 }).toList();
+
+                double totalOntem = products.fold(
+                  0.0,
+                      (acc, e) => acc + parseBrazilianCurrency(e.pagontem),
+                );
+                double totalHoje = products.fold(
+                  0.0,
+                      (acc, e) => acc + parseBrazilianCurrency(e.paghoje),
+                );
+                double totalAmanha = products.fold(
+                  0.0,
+                      (acc, e) => acc + parseBrazilianCurrency(e.pagamanha),
+                );
+
                 return ListView.builder(
                   padding: const EdgeInsets.all(12),
                   itemCount: filteredProducts.length + 1,
                   itemBuilder: (context, index) {
                     if (index == filteredProducts.length) {
-                      return Row();
+                      return Card(
+                        color: Colors.green[100],
+                        elevation: 2,
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Total Geral',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 8),
+                              if (selectedDay == 'ontem')
+                                Text("Total $ontem: ${UtilBrasilFields.obterReal(totalOntem)}"),
+                              if (selectedDay == 'hoje')
+                                Text("Total $hoje:${UtilBrasilFields.obterReal(totalHoje)}"),
+                              if (selectedDay == 'amanha')
+                                Text("Total $amanha: ${UtilBrasilFields.obterReal(totalAmanha)}"),
+                            ],
+                          ),
+                        ),
+                      );
                     }
 
                     final product = filteredProducts[index];
@@ -115,14 +151,12 @@ class _DailyPaymentsPageState extends State<DailyPaymentsPage> {
                       elevation: 3,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
-                        side: BorderSide(
-                            color: Colors.blue.shade100, width: 1.5),
+                        side: BorderSide(color: Colors.blue.shade100, width: 1.5),
                       ),
                       color: Colors.blue.shade50,
                       margin: const EdgeInsets.only(bottom: 12),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 12),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -132,9 +166,7 @@ class _DailyPaymentsPageState extends State<DailyPaymentsPage> {
                                 SizedBox(width: 8),
                                 Text(
                                   'Fornecedor:',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
+                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                                 ),
                               ],
                             ),
@@ -145,12 +177,11 @@ class _DailyPaymentsPageState extends State<DailyPaymentsPage> {
                             const SizedBox(height: 12),
                             Row(
                               children: [
-                                const Icon(Icons.calendar_today,
-                                    size: 18, color: Colors.grey),
+                                const Icon(Icons.calendar_today, size: 18, color: Colors.grey),
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
-                                    '$label: ${formatCurrency(value ?? '0,0')}',
+                                    '$label: ${UtilBrasilFields.obterReal(double.parse(value!.replaceAll('.', '').replaceAll(',', '.') ?? "00.00") ?? 0.0)}',
                                     style: _valueStyle(value),
                                   ),
                                 ),
