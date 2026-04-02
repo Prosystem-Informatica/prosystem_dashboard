@@ -226,6 +226,7 @@ class _LoginPageState extends State<LoginPage> with Messages<LoginPage> {
                     ],
                   ),
                   CustomButton(
+                    disabled: state.status == LoginStateStatus.loading,
                     onPressed: () async {
                       SharedPreferences prefs =
                           await SharedPreferences.getInstance();
@@ -270,7 +271,6 @@ class _LoginPageState extends State<LoginPage> with Messages<LoginPage> {
                       }
                     },
                     text: "Entrar",
-                    disabled: false,
                   ),
                   /*CustomButton(
                     onPressed: () {
