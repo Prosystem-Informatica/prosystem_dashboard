@@ -160,11 +160,8 @@ class _LoginPageState extends State<LoginPage> with Messages<LoginPage> {
           },
           any: () {},
         );
-        if (state.validationModel!.codigo! != "0") {
-          isVisible = true;
-        } else {
-          isVisible = false;
-        }
+        final codigo = state.validationModel?.codigo ?? '';
+        isVisible = codigo.isNotEmpty && codigo != "0";
       },
       builder: (context, state) {
         return Scaffold(
@@ -238,8 +235,12 @@ class _LoginPageState extends State<LoginPage> with Messages<LoginPage> {
                         _authenticate(state.validationModel!);
                       } else if (saveCredentials == true &&
                           prefs.getString("cnpj") == null) {
-                        if (state.validationModel!.codigo! == "0" ||
-                            state.validationModel!.codigo! == "") {
+                        final codigo = state.validationModel?.codigo ?? '';
+                        if (codigo.isEmpty || codigo == "0") {
+                          if (cnpj.text.trim().isEmpty) {
+                            showError("Informe o CNPJ");
+                            return;
+                          }
                           await context
                               .read<LoginBlocCubit>()
                               .login(cnpj.text.toUpperCase());
@@ -251,15 +252,20 @@ class _LoginPageState extends State<LoginPage> with Messages<LoginPage> {
                           await _saveCredentials(state.validationModel!);
                         }
                       } else {
-                        if (state.validationModel!.codigo! == "0" ||
-                            state.validationModel!.codigo! == "") {
-                          await context.read<LoginBlocCubit>().login(
-                              /*"19685970000104" ?? */ cnpj.text.toUpperCase());
+                        final codigo = state.validationModel?.codigo ?? '';
+                        if (codigo.isEmpty || codigo == "0") {
+                          if (cnpj.text.trim().isEmpty) {
+                            showError("Informe o CNPJ");
+                            return;
+                          }
+                          await context
+                              .read<LoginBlocCubit>()
+                              .login(cnpj.text.toUpperCase());
                         } else if (state.validationModel!.porta! != "" ||
                             state.validationModel!.empresa! != "") {
                           await context.read<LoginBlocCubit>().loginUser(
-                              /*"SUPORTE" ?? */ username.text.toUpperCase(),
-                              /*"PR05YST3M" ?? */ password.text.toUpperCase());
+                              username.text.toUpperCase(),
+                              password.text.toUpperCase());
                         }
                       }
                     },

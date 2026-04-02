@@ -49,6 +49,7 @@ dependencies:
   shared_preferences: ^2.2.2
   board_datetime_picker: ^2.5.0
   brasil_fields: ^1.15.0
+  package_info_plus: ^8.1.3
 
 
 
