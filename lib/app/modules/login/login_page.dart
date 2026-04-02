@@ -124,12 +124,13 @@ class _LoginPageState extends State<LoginPage> with Messages<LoginPage> {
                 color: Color(0xFF0511F2),
               ),
             ),
-            children: userAuth.map((user) {
+            children: userAuth
+                .where((user) => user.fantasia != null && user.codigo != null)
+                .map((user) {
               return ListTile(
-                leading: Icon(Icons.business_sharp),
+                leading: const Icon(Icons.business_sharp),
                 title: Text(user.fantasia!),
                 onTap: () {
-                  Get.arguments;
                   Navigator.pop(context);
                   Get.offAllNamed("/home", arguments: user);
                 },
@@ -147,9 +148,12 @@ class _LoginPageState extends State<LoginPage> with Messages<LoginPage> {
         state.status.matchAny(
           success: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
-            await prefs.setString(
-                'host', state.validationModel!.servidor!.toLowerCase());
-            await prefs.setString('port', state.validationModel!.porta!);
+            final servidor = state.validationModel?.servidor;
+            final porta = state.validationModel?.porta;
+            if (servidor != null && porta != null) {
+              await prefs.setString('host', servidor.toLowerCase());
+              await prefs.setString('port', porta);
+            }
             showSuccess(state.successMessage ?? "Sucesso");
             if (state.successMessage == "Login Realizado com Sucesso!!") {
               _showDialog(context, state.userAuthModel!);
@@ -228,6 +232,7 @@ class _LoginPageState extends State<LoginPage> with Messages<LoginPage> {
                   CustomButton(
                     disabled: state.status == LoginStateStatus.loading,
                     onPressed: () async {
+                      log("Dados digitados: ${cnpj.text} - ${username.text} - ${password.text}");
                       SharedPreferences prefs =
                           await SharedPreferences.getInstance();
                       if (saveCredentials == true &&

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../repositories/login/model/user_auth_model.dart';
+import '../login/cubit/login_bloc_cubit.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -59,11 +61,16 @@ class _ProfilePageState extends State<ProfilePage> {
             leading: const Icon(Icons.exit_to_app),
             title: const Text("Sair"),
             onTap: () async {
-              SharedPreferences prefs = await SharedPreferences.getInstance();
+              final prefs = await SharedPreferences.getInstance();
               await prefs.remove('cnpj');
               await prefs.remove('username');
               await prefs.remove('password');
+              await prefs.remove('host');
+              await prefs.remove('port');
               await prefs.setBool('saveCredentials', false);
+              if (context.mounted) {
+                context.read<LoginBlocCubit>().reset();
+              }
               Get.offAllNamed("/login");
             },
           ),

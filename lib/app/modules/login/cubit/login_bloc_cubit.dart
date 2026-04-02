@@ -44,6 +44,10 @@ class LoginBlocCubit extends Cubit<LoginBlocState> {
     }
   }
 
+  void reset() {
+    emit(LoginBlocState.initial());
+  }
+
   Future<void> loginUser( String username, String password) async {
     try {
       emit(
