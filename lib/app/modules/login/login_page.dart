@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:prosystem_dashboard/app/repositories/login/model/validation_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:prosystem_dashboard/app/core/ui/helpers/messages.dart';
 import 'package:prosystem_dashboard/app/modules/login/cubit/login_bloc_cubit.dart';
@@ -26,8 +25,8 @@ class _LoginPageState extends State<LoginPage> with Messages<LoginPage> {
   late TextEditingController cnpj = TextEditingController();
   late TextEditingController username = TextEditingController();
   late TextEditingController password = TextEditingController();
-  bool isVisible = false;
   bool saveCredentials = false;
+  String _persistedHost = '';
 
   @override
   void initState() {
@@ -36,42 +35,19 @@ class _LoginPageState extends State<LoginPage> with Messages<LoginPage> {
   }
 
   Future<void> _loadSavedCredentials() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
+    final prefs = await SharedPreferences.getInstance();
     setState(() {
       cnpj.text = prefs.getString('cnpj') ?? '';
       username.text = prefs.getString('username') ?? '';
       password.text = prefs.getString('password') ?? '';
       saveCredentials = prefs.getBool('saveCredentials') ?? false;
+      _persistedHost = prefs.getString('host') ?? '';
     });
   }
 
-  Future<void> _saveCredentials(ValidationModel validationModel) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.getString("cnpj") == null) {
-      if (saveCredentials) {
-        await prefs.setString('cnpj', cnpj.text);
-        await prefs.setString('host', validationModel.servidor!.toLowerCase());
-        await prefs.setString('port', validationModel.porta!);
-        await prefs.setString('username', username.text);
-        await prefs.setString('password', password.text);
-        await prefs.setBool('saveCredentials', true);
-      }
-    } else {
-      await prefs.remove('cnpj');
-      await prefs.remove('username');
-      await prefs.remove('password');
-      await prefs.remove('port');
-      await prefs.remove('host');
-      await prefs.setBool('saveCredentials', false);
-    }
-  }
-
-  Future<void> _authenticate(ValidationModel? validationModel) async {
-    bool canCheckBiometrics = await _localAuth.canCheckBiometrics;
-    bool isDeviceSupported = await _localAuth.isDeviceSupported();
-    // TODO : Somente para Testes
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  Future<void> _authenticate() async {
+    final canCheckBiometrics = await _localAuth.canCheckBiometrics;
+    final isDeviceSupported = await _localAuth.isDeviceSupported();
 
     if (!canCheckBiometrics || !isDeviceSupported) {
       print('Biometria não suportada ou não disponível.');
@@ -79,29 +55,23 @@ class _LoginPageState extends State<LoginPage> with Messages<LoginPage> {
     }
 
     try {
-      bool authenticated = await _localAuth.authenticate(
+      final authenticated = await _localAuth.authenticate(
         localizedReason: 'Autentique-se para acessar o aplicativo',
-        options: const AuthenticationOptions(
-          biometricOnly: true,
-        ),
+        options: const AuthenticationOptions(biometricOnly: true),
       );
 
       if (authenticated) {
-        print('Autenticação bem-sucedida!');
-        if (saveCredentials) {
-          if (prefs.getString("cnpj") != null) {
-            await context
-                .read<LoginBlocCubit>()
-                .login(prefs.getString("cnpj") ?? cnpj.text.toUpperCase());
-
-            await context.read<LoginBlocCubit>().loginUser(
-                prefs.getString("username") ?? username.text.toUpperCase(),
-                prefs.getString("password") ?? password.text.toUpperCase());
-          }
+        final prefs = await SharedPreferences.getInstance();
+        final savedCnpj = prefs.getString('cnpj');
+        if (savedCnpj != null) {
+          await context.read<LoginBlocCubit>().login(savedCnpj);
+          await context.read<LoginBlocCubit>().loginUser(
+                prefs.getString('username') ?? username.text.toUpperCase(),
+                prefs.getString('password') ?? password.text.toUpperCase(),
+              );
         }
       } else {
         showError("Autenticação falhou ou foi cancelada.");
-        print('Autenticação falhou ou foi cancelada.');
       }
     } catch (e) {
       showError("Erro durante a autenticação");
@@ -109,35 +79,36 @@ class _LoginPageState extends State<LoginPage> with Messages<LoginPage> {
     }
   }
 
-  _showDialog(BuildContext context, List<UserAuthModel> userAuth) {
+  void _showDialog(BuildContext context, List<UserAuthModel> userAuth) {
     showDialog(
-        context: context,
-        builder: (context) {
-          return SimpleDialog(
-            title: Text(
-              'Selecione a empresa',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 1.3,
-                color: Color(0xFF0511F2),
-              ),
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: const Text(
+            'Selecione a empresa',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.3,
+              color: Color(0xFF0511F2),
             ),
-            children: userAuth
-                .where((user) => user.fantasia != null && user.codigo != null)
-                .map((user) {
-              return ListTile(
-                leading: const Icon(Icons.business_sharp),
-                title: Text(user.fantasia!),
-                onTap: () {
-                  Navigator.pop(context);
-                  Get.offAllNamed("/home", arguments: user);
-                },
-              );
-            }).toList(),
-          );
-        });
+          ),
+          children: userAuth
+              .where((user) => user.fantasia != null && user.codigo != null)
+              .map((user) {
+            return ListTile(
+              leading: const Icon(Icons.business_sharp),
+              title: Text(user.fantasia!),
+              onTap: () {
+                Navigator.pop(context);
+                Get.offAllNamed("/home", arguments: user);
+              },
+            );
+          }).toList(),
+        );
+      },
+    );
   }
 
   @override
@@ -147,16 +118,26 @@ class _LoginPageState extends State<LoginPage> with Messages<LoginPage> {
         log("Objeto > ${state.validationModel}");
         state.status.matchAny(
           success: () async {
-            SharedPreferences prefs = await SharedPreferences.getInstance();
+            final prefs = await SharedPreferences.getInstance();
             final servidor = state.validationModel?.servidor;
             final porta = state.validationModel?.porta;
+
             if (servidor != null && porta != null) {
               await prefs.setString('host', servidor.toLowerCase());
               await prefs.setString('port', porta);
+              if (mounted) setState(() => _persistedHost = servidor.toLowerCase());
             }
+
             showSuccess(state.successMessage ?? "Sucesso");
+
             if (state.successMessage == "Login Realizado com Sucesso!!") {
-              _showDialog(context, state.userAuthModel!);
+              if (saveCredentials) {
+                await prefs.setString('cnpj', cnpj.text);
+                await prefs.setString('username', username.text);
+                await prefs.setString('password', password.text);
+                await prefs.setBool('saveCredentials', true);
+              }
+              if (mounted) _showDialog(context, state.userAuthModel!);
             }
           },
           error: () {
@@ -164,13 +145,15 @@ class _LoginPageState extends State<LoginPage> with Messages<LoginPage> {
           },
           any: () {},
         );
-        final codigo = state.validationModel?.codigo ?? '';
-        isVisible = codigo.isNotEmpty && codigo != "0";
       },
       builder: (context, state) {
+        final codigo = state.validationModel?.codigo ?? '';
+        final cnpjValidated =
+            (codigo.isNotEmpty && codigo != "0") || _persistedHost.isNotEmpty;
+
         return Scaffold(
           body: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('assets/bg-login.jpg'),
                 fit: BoxFit.cover,
@@ -192,98 +175,62 @@ class _LoginPageState extends State<LoginPage> with Messages<LoginPage> {
                     inputType: TextInputType.number,
                   ),
                   Visibility(
-                    visible: isVisible,
+                    visible: cnpjValidated,
                     child: TextFieldCustom(
                       controller: username,
                       label: 'Usuario',
                       hintText: 'Usuario',
-                      formatters: [
-                        UpperCaseTextFormatter(),
-                      ],
+                      formatters: [UpperCaseTextFormatter()],
                     ),
                   ),
                   Visibility(
-                    visible: isVisible,
+                    visible: cnpjValidated,
                     child: TextFieldCustom(
                       controller: password,
                       label: 'Senha',
                       hintText: 'Senha',
                       obscureText: true,
-                      formatters: [
-                        UpperCaseTextFormatter(),
-                      ],
+                      formatters: [UpperCaseTextFormatter()],
                     ),
                   ),
-                  // Checkbox para salvar credenciais
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Checkbox(
                         value: saveCredentials,
                         onChanged: (value) {
-                          setState(() {
-                            saveCredentials = value ?? false;
-                          });
+                          setState(() => saveCredentials = value ?? false);
                         },
                       ),
-                      Text("Salvar credenciais"),
+                      const Text("Salvar credenciais"),
                     ],
                   ),
                   CustomButton(
                     disabled: state.status == LoginStateStatus.loading,
                     onPressed: () async {
-                      log("Dados digitados: ${cnpj.text} - ${username.text} - ${password.text}");
-                      SharedPreferences prefs =
-                          await SharedPreferences.getInstance();
-                      if (saveCredentials == true &&
-                          prefs.getString("cnpj") != null) {
-                        await _saveCredentials(state.validationModel!);
-                        _authenticate(state.validationModel!);
-                      } else if (saveCredentials == true &&
-                          prefs.getString("cnpj") == null) {
-                        final codigo = state.validationModel?.codigo ?? '';
-                        if (codigo.isEmpty || codigo == "0") {
-                          if (cnpj.text.trim().isEmpty) {
-                            showError("Informe o CNPJ");
-                            return;
-                          }
-                          await context
-                              .read<LoginBlocCubit>()
-                              .login(cnpj.text.toUpperCase());
-                        } else if (state.validationModel!.porta! != "" ||
-                            state.validationModel!.empresa! != "") {
-                          await context.read<LoginBlocCubit>().loginUser(
-                              username.text.toUpperCase(),
-                              password.text.toUpperCase());
-                          await _saveCredentials(state.validationModel!);
+                      final prefs = await SharedPreferences.getInstance();
+                      final codigo = state.validationModel?.codigo ?? '';
+                      final host = prefs.getString('host') ?? '';
+                      final cnpjOk =
+                          (codigo.isNotEmpty && codigo != "0") || host.isNotEmpty;
+
+                      if (!cnpjOk) {
+                        if (cnpj.text.trim().isEmpty) {
+                          showError("Informe o CNPJ");
+                          return;
                         }
+                        await context
+                            .read<LoginBlocCubit>()
+                            .login(cnpj.text.toUpperCase());
                       } else {
-                        final codigo = state.validationModel?.codigo ?? '';
-                        if (codigo.isEmpty || codigo == "0") {
-                          if (cnpj.text.trim().isEmpty) {
-                            showError("Informe o CNPJ");
-                            return;
-                          }
-                          await context
-                              .read<LoginBlocCubit>()
-                              .login(cnpj.text.toUpperCase());
-                        } else if (state.validationModel!.porta! != "" ||
-                            state.validationModel!.empresa! != "") {
-                          await context.read<LoginBlocCubit>().loginUser(
+                        await context.read<LoginBlocCubit>().loginUser(
                               username.text.toUpperCase(),
-                              password.text.toUpperCase());
-                        }
+                              password.text.toUpperCase(),
+                            );
                       }
                     },
                     text: "Entrar",
                   ),
-                  /*CustomButton(
-                    onPressed: () {
-                      _authenticate(state.validationModel!);
-                    },
-                    text: "Entrar com Face ID (TESTES)",
-                    disabled: false,
-                  ),*/
                 ],
               ),
             ),
@@ -292,6 +239,4 @@ class _LoginPageState extends State<LoginPage> with Messages<LoginPage> {
       },
     );
   }
-
-  _fetchLogin() async {}
 }
